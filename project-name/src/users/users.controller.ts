@@ -1,5 +1,5 @@
-import { Controller, Get, Logger } from '@nestjs/common'
-import { ApiOperation, ApiResponse } from '@nestjs/swagger'
+import { Controller, Get, Logger, Param, ParseIntPipe, Query } from '@nestjs/common'
+import { ApiOperation, ApiQuery, ApiResponse } from '@nestjs/swagger'
 import { AlbumDto } from './types/album.dto'
 import { CommentDto } from './types/comment.dto'
 import { PhotoDto } from './types/photo.dto'
@@ -26,8 +26,14 @@ export class UsersController {
         description: 'All is correct',
         type: [UserDto],
     })
-    async listUsers(): Promise<UserDto[]> {
-        return this.usersService.listUsers()
+    @ApiQuery({
+        name: 'limit',
+        description: 'Limit the number of users to show',
+        example: 3,
+        required: false,
+    })
+    async listUsers(@Query('limit', ParseIntPipe) limit: number): Promise<UserDto[]> {
+        return this.usersService.listUsers(limit)
     }
 
     @Get('posts')
@@ -99,4 +105,21 @@ export class UsersController {
     async listTodoos(): Promise<TodoDto[]> {
         return this.usersService.listTodos()
     }
+
+    @Get('users/:id')
+    @ApiOperation({
+        summary: 'Get the User by ID',
+        description: 'Return User by ID',
+    })
+    @ApiResponse({
+        status: 200,
+        description: 'All is correct',
+        type: UserDto,
+    })
+    async getUser(@Param('id') id: number): Promise<UserDto> {
+        return this.usersService.getUser(id)
+    }
 }
+
+// also, I wanna be able to fetch /api/users?offset=3 so it returns all the users EXCEPT the first 3
+// and it should work combined like /api/users?limit=2&offset=5 so it returns the user 6º and 7º

@@ -1,5 +1,5 @@
 import { HttpService } from '@nestjs/axios'
-import { Injectable, Logger } from '@nestjs/common'
+import { BadRequestException, Injectable, Logger } from '@nestjs/common'
 import { lastValueFrom } from 'rxjs'
 import { AlbumDto } from './types/album.dto'
 import { CommentDto } from './types/comment.dto'
@@ -26,8 +26,13 @@ export class UsersService {
         ).data
     }
 
-    async listUsers(): Promise<UserDto[]> {
-        return this.fetchData<UserDto[]>('users')
+    async listUsers(limit: number): Promise<UserDto[]> {
+        const users = await this.fetchData<UserDto[]>('users')
+
+        if (limit < 0) {
+            throw new BadRequestException('negative numbers not allowed')
+        }
+        return limit ? users.slice(0, limit) : users
     }
 
     async listPosts(): Promise<PostDto[]> {
@@ -49,4 +54,10 @@ export class UsersService {
     async listTodos(): Promise<TodoDto[]> {
         return this.fetchData<TodoDto[]>('todos')
     }
+
+    async getUser(id: number): Promise<UserDto> {
+        return this.fetchData<UserDto>(`users/${id}`)
+    }
 }
+
+// also, i wanna be able to fetch    /api/users?limit=3    so it returns the first 3 users
