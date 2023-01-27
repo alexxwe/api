@@ -26,13 +26,20 @@ export class UsersService {
         ).data
     }
 
-    async listUsers(limit?: number, offset?: number): Promise<UserDto[]> {
+    async listUsers(limit: number, offset: number): Promise<UserDto[]> {
         const users = await this.fetchData<UserDto[]>('users')
 
         if (limit < 0 || offset < 0) {
             throw new BadRequestException('Negative numbers not allowed')
         }
-        return limit ? users.slice(offset, offset + limit) : users
+        if (!limit) {
+            limit = users.length
+        }
+        return users.slice(offset, offset + limit)
+    }
+
+    async getUser(id: number): Promise<UserDto> {
+        return this.fetchData<UserDto>(`users/${id}`)
     }
 
     async listPosts(): Promise<PostDto[]> {
@@ -53,9 +60,5 @@ export class UsersService {
 
     async listTodos(): Promise<TodoDto[]> {
         return this.fetchData<TodoDto[]>('todos')
-    }
-
-    async getUser(id: number): Promise<UserDto> {
-        return this.fetchData<UserDto>(`users/${id}`)
     }
 }

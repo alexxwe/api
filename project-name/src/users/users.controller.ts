@@ -1,4 +1,4 @@
-import { Controller, Get, Logger, Param, ParseIntPipe, Query } from '@nestjs/common'
+import { Controller, DefaultValuePipe, Get, Logger, Param, ParseIntPipe, Query } from '@nestjs/common'
 import { ApiOperation, ApiQuery, ApiResponse } from '@nestjs/swagger'
 import { AlbumDto } from './types/album.dto'
 import { CommentDto } from './types/comment.dto'
@@ -38,8 +38,25 @@ export class UsersController {
         example: 5,
         required: false,
     })
-    async listUsers(@Query('limit', ParseIntPipe) limit: number, @Query('offset', ParseIntPipe) offset: number): Promise<UserDto[]> {
+    async listUsers(
+        @Query('limit', new DefaultValuePipe(0), ParseIntPipe) limit: number,
+        @Query('offset', new DefaultValuePipe(0), ParseIntPipe) offset: number,
+    ): Promise<UserDto[]> {
         return this.usersService.listUsers(limit, offset)
+    }
+
+    @Get('users/:id')
+    @ApiOperation({
+        summary: 'Get the User by ID',
+        description: 'Return User by ID',
+    })
+    @ApiResponse({
+        status: 200,
+        description: 'All is correct',
+        type: UserDto,
+    })
+    async getUser(@Param('id') id: number): Promise<UserDto> {
+        return this.usersService.getUser(id)
     }
 
     @Get('posts')
@@ -110,19 +127,5 @@ export class UsersController {
     })
     async listTodoos(): Promise<TodoDto[]> {
         return this.usersService.listTodos()
-    }
-
-    @Get('users/:id')
-    @ApiOperation({
-        summary: 'Get the User by ID',
-        description: 'Return User by ID',
-    })
-    @ApiResponse({
-        status: 200,
-        description: 'All is correct',
-        type: UserDto,
-    })
-    async getUser(@Param('id') id: number): Promise<UserDto> {
-        return this.usersService.getUser(id)
     }
 }
