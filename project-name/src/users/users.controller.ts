@@ -18,7 +18,7 @@ export class UsersController {
 
     @Get('users')
     @ApiOperation({
-        summary: 'Get all the users',
+        summary: 'Get the users',
         description: 'Returns a list of users',
     })
     @ApiResponse({
@@ -29,11 +29,17 @@ export class UsersController {
     @ApiQuery({
         name: 'limit',
         description: 'Limit the number of users to show',
-        example: 3,
+        example: 2,
         required: false,
     })
-    async listUsers(@Query('limit', ParseIntPipe) limit: number): Promise<UserDto[]> {
-        return this.usersService.listUsers(limit)
+    @ApiQuery({
+        name: 'offset',
+        description: 'Number of users to skip',
+        example: 5,
+        required: false,
+    })
+    async listUsers(@Query('limit', ParseIntPipe) limit: number, @Query('offset', ParseIntPipe) offset: number): Promise<UserDto[]> {
+        return this.usersService.listUsers(limit, offset)
     }
 
     @Get('posts')
@@ -120,6 +126,3 @@ export class UsersController {
         return this.usersService.getUser(id)
     }
 }
-
-// also, I wanna be able to fetch /api/users?offset=3 so it returns all the users EXCEPT the first 3
-// and it should work combined like /api/users?limit=2&offset=5 so it returns the user 6º and 7º

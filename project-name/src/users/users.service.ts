@@ -26,13 +26,13 @@ export class UsersService {
         ).data
     }
 
-    async listUsers(limit: number): Promise<UserDto[]> {
+    async listUsers(limit?: number, offset?: number): Promise<UserDto[]> {
         const users = await this.fetchData<UserDto[]>('users')
 
-        if (limit < 0) {
-            throw new BadRequestException('negative numbers not allowed')
+        if (limit < 0 || offset < 0) {
+            throw new BadRequestException('Negative numbers not allowed')
         }
-        return limit ? users.slice(0, limit) : users
+        return limit ? users.slice(offset, offset + limit) : users
     }
 
     async listPosts(): Promise<PostDto[]> {
@@ -59,5 +59,3 @@ export class UsersService {
         return this.fetchData<UserDto>(`users/${id}`)
     }
 }
-
-// also, i wanna be able to fetch    /api/users?limit=3    so it returns the first 3 users
