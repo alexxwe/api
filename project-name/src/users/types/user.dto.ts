@@ -65,7 +65,7 @@ class CompanyDto {
 export class UserDto {
     @ApiProperty({
         description: 'User ID',
-        example: 78,
+        example: 7,
     })
     id: number
 

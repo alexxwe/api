@@ -6,6 +6,7 @@ import { PhotoDto } from './types/photo.dto'
 import { PostDto } from './types/post.dto'
 import { TodoDto } from './types/todo.dto'
 import { UserDto } from './types/user.dto'
+import { UserResponseDto } from './types/usersResponse.dto'
 import { UsersService } from './users.service'
 
 @Controller('api')
@@ -57,6 +58,76 @@ export class UsersController {
     })
     async getUser(@Param('id') id: number): Promise<UserDto> {
         return this.usersService.getUser(id)
+    }
+
+    @Get('users/:userId/posts')
+    @ApiOperation({
+        summary: 'Get all the posts of a specific user',
+        description: 'Returns a list of posts for the selected user',
+    })
+    @ApiResponse({
+        status: 200,
+        description: 'All is correct',
+        type: [PostDto],
+    })
+    async getUserPosts(@Param('userId') userId: number): Promise<PostDto[]> {
+        return this.usersService.getUserPosts(userId)
+    }
+
+    @Get('users/:postId/comments')
+    @ApiOperation({
+        summary: 'Get all the comments of a specific user',
+        description: 'Returns a list of comments for the selected user',
+    })
+    @ApiResponse({
+        status: 200,
+        description: 'All is correct',
+        type: [CommentDto],
+    })
+    async getUserComment(@Param('postId') postId: number): Promise<CommentDto[]> {
+        return this.usersService.getUserComments(postId)
+    }
+
+    @Get('users/:userId/albums')
+    @ApiOperation({
+        summary: 'Get all the albums of a specific user',
+        description: 'Returns a list of albums for the selected user',
+    })
+    @ApiResponse({
+        status: 200,
+        description: 'All is correct',
+        type: [AlbumDto],
+    })
+    async getUserAlbums(@Param('userId') userId: number): Promise<AlbumDto[]> {
+        return this.usersService.getUserAlbums(userId)
+    }
+
+    @Get('users/:albumId/photos')
+    @ApiOperation({
+        summary: 'Get all the photos of a specific user',
+        description: 'Returns a list of photos for the selected user',
+    })
+    @ApiResponse({
+        status: 200,
+        description: 'All is correct',
+        type: [PhotoDto],
+    })
+    async getUserPhotos(@Param('albumId') albumId: number): Promise<PhotoDto[]> {
+        return this.usersService.getUserPhotos(albumId)
+    }
+
+    @Get('users/:userId/todos')
+    @ApiOperation({
+        summary: 'Get all the todos of a specific user',
+        description: 'Returns a list of todos for the selected user',
+    })
+    @ApiResponse({
+        status: 200,
+        description: 'All is correct',
+        type: [TodoDto],
+    })
+    async getUserTodos(@Param('userId') userId: number): Promise<TodoDto[]> {
+        return this.usersService.getUserTodos(userId)
     }
 
     @Get('posts')
@@ -125,7 +196,12 @@ export class UsersController {
         description: 'All is correct',
         type: [TodoDto],
     })
-    async listTodoos(): Promise<TodoDto[]> {
+    async listTodos(): Promise<TodoDto[]> {
         return this.usersService.listTodos()
     }
 }
+
+// endpoint que sea
+// user/id/posts
+// conjunto de usuarios, usuario5 solo coger los post de ese usuario
+// el 2o pero con /posts basicamente
