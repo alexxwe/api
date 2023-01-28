@@ -7,6 +7,7 @@ import { PhotoDto } from './types/photo.dto'
 import { PostDto } from './types/post.dto'
 import { TodoDto } from './types/todo.dto'
 import { UserDto } from './types/user.dto'
+import { UserResponseDto } from './types/usersResponse.dto'
 
 @Injectable()
 export class UsersService {
@@ -40,6 +41,26 @@ export class UsersService {
 
     async getUser(id: number): Promise<UserDto> {
         return this.fetchData<UserDto>(`users/${id}`)
+    }
+
+    async getUserPosts(userId: number): Promise<PostDto[]> {
+        return this.fetchData<PostDto[]>(`posts?userId=${userId}`)
+    }
+
+    async getUserComments(postId: number): Promise<CommentDto[]> {
+        return this.fetchData<CommentDto[]>(`comments?postId=${postId}`)
+    }
+
+    async getUserAlbums(userId: number): Promise<AlbumDto[]> {
+        return this.fetchData<AlbumDto[]>(`albums?userId=${userId}`)
+    }
+
+    async getUserPhotos(albumId: number): Promise<PhotoDto[]> {
+        return this.fetchData<PhotoDto[]>(`photos?albumId=${albumId}`)
+    }
+
+    async getUserTodos(userId: number): Promise<TodoDto[]> {
+        return this.fetchData<TodoDto[]>(`todos?userId=${userId}`)
     }
 
     async listPosts(): Promise<PostDto[]> {
