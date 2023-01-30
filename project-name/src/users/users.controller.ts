@@ -199,6 +199,20 @@ export class UsersController {
     async listTodos(): Promise<TodoDto[]> {
         return this.usersService.listTodos()
     }
+
+    @Get('users/:id/alldata')
+    @ApiOperation({
+        summary: 'Get all the post of a specific user',
+        description: 'Returns a list of posts for the selected user',
+    })
+    @ApiResponse({
+        status: 200,
+        description: 'All is correct',
+        type: UserResponseDto,
+    })
+    async getAllData(@Param('id') id: number): Promise<UserResponseDto> {
+        return this.usersService.getAllData(id)
+    }
 }
 
 // endpoint que sea

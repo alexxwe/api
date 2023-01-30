@@ -82,4 +82,14 @@ export class UsersService {
     async listTodos(): Promise<TodoDto[]> {
         return this.fetchData<TodoDto[]>('todos')
     }
+
+    async getAllData(id: number): Promise<UserResponseDto> {
+        const user = await this.fetchData<UserDto>(`users/${id}`)
+        const posts = await this.fetchData<PostDto[]>(`posts?userId=${id}`)
+
+        return {
+            ...user,
+            posts,
+        }
+    }
 }
