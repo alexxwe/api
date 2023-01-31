@@ -86,10 +86,18 @@ export class UsersService {
     async getAllData(id: number): Promise<UserResponseDto> {
         const user = await this.fetchData<UserDto>(`users/${id}`)
         const posts = await this.fetchData<PostDto[]>(`posts?userId=${id}`)
+        const comments = await this.fetchData<CommentDto[]>(`comments?postId=${id}`)
+        const albums = await this.fetchData<AlbumDto[]>(`albums?userId=${id}`)
+        const photos = await this.fetchData<PhotoDto[]>(`photos?albumId=${id}`)
+        const todos = await this.fetchData<TodoDto[]>(`todos?userId=${id}`)
 
         return {
             ...user,
             posts,
+            comments,
+            albums,
+            photos,
+            todos,
         }
     }
 }

@@ -214,8 +214,3 @@ export class UsersController {
         return this.usersService.getAllData(id)
     }
 }
-
-// endpoint que sea
-// user/id/posts
-// conjunto de usuarios, usuario5 solo coger los post de ese usuario
-// el 2o pero con /posts basicamente
