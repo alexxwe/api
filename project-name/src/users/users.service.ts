@@ -1,5 +1,5 @@
 import { HttpService } from '@nestjs/axios'
-import { BadRequestException, Injectable, Logger } from '@nestjs/common'
+import { BadRequestException, Injectable, Logger, NotFoundException } from '@nestjs/common'
 import { lastValueFrom } from 'rxjs'
 import { AlbumDto } from './types/album.dto'
 import { CommentDto } from './types/comment.dto'
@@ -18,13 +18,20 @@ export class UsersService {
     private async fetchData<T>(endpoint: string): Promise<T> {
         const url = `https://jsonplaceholder.typicode.com/${endpoint}`
 
-        return (
-            await lastValueFrom(
+        try {
+            const { data } = await lastValueFrom(
                 this.httpService.get(url, {
                     headers: { 'Accept-Encoding': 'gzip,deflate,compress' },
                 }),
             )
-        ).data
+
+            return data
+        } catch (error: any) {
+            if (error.response.status === 404) {
+                throw new NotFoundException('User not found')
+            }
+            throw new BadRequestException('Something went wrong')
+        }
     }
 
     async listUsers(limit: number, offset: number): Promise<UserDto[]> {
