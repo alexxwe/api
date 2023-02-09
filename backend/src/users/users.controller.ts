@@ -1,4 +1,4 @@
-import { Controller, DefaultValuePipe, Get, Logger, Param, ParseIntPipe, Query } from '@nestjs/common'
+import { Controller, DefaultValuePipe, Get, Logger, Param, ParseIntPipe, Query, Delete } from '@nestjs/common'
 import { ApiOperation, ApiQuery, ApiResponse } from '@nestjs/swagger'
 import { AlbumDto } from './types/album.dto'
 import { CommentDto } from './types/comment.dto'
@@ -58,6 +58,20 @@ export class UsersController {
     })
     async getUser(@Param('id') id: number): Promise<UserDto> {
         return this.usersService.getUser(id)
+    }
+
+    @Delete('user/:id')
+    @ApiOperation({
+        summary: 'Delete the User by ID',
+        description: 'Delete User by ID',
+    })
+    @ApiResponse({
+        status: 200,
+        description: 'User data is deleted',
+        type: Boolean,
+    })
+    async deleteUser(@Param('id') id: number): Promise<boolean> {
+        return this.usersService.deleteUser(id)
     }
 
     @Get('users/:userId/posts')

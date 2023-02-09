@@ -50,6 +50,11 @@ export class UsersService {
         return this.fetchData<UserDto>(`users/${id}`)
     }
 
+    async deleteUser(id: number): Promise<boolean> {
+        this.deleteUser(id)
+        return true
+    }
+
     async getUserPosts(userId: number): Promise<PostDto[]> {
         return this.fetchData<PostDto[]>(`posts?userId=${userId}`)
     }
